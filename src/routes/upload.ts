@@ -19,8 +19,8 @@ export async function uploadRoutes(app: FastifyInstance) {
       return reply.status(400).send()
     }
 
-    const mineTypeRegex = /^(image|video)\/(a-zA-Z)+/
-    const isValidFileFormat = mineTypeRegex.test(upload.mimetype)
+    const mimeTypeRegex = /^(image|video)\/[a-zA-Z]+/
+    const isValidFileFormat = mimeTypeRegex.test(upload.mimetype)
 
     if (!isValidFileFormat) {
       return reply.status(400).send()
@@ -32,7 +32,7 @@ export async function uploadRoutes(app: FastifyInstance) {
     const fileName = fileId.concat(extension)
 
     const writeStream = createWriteStream(
-      resolve(__dirname, '../ ../uploads/', fileName),
+      resolve(__dirname, '..', '..', 'uploads', fileName),
     )
 
     // Amazon S3, google GCS, cloudflare R2
@@ -40,7 +40,7 @@ export async function uploadRoutes(app: FastifyInstance) {
     await pump(upload.file, writeStream)
 
     const fullUrl = request.protocol.concat('://').concat(request.hostname)
-    const fileUrl = new URL(`/uploads/${fileName}`, fullUrl.toString())
+    const fileUrl = new URL(`/uploads/${fileName}`, fullUrl).toString()
 
     return { fileUrl }
   })
