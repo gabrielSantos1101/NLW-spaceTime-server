@@ -15,7 +15,7 @@ app.register(multipart)
 
 app.register(require('@fastify/static'), {
   root: resolve(__dirname, '../uploads', 'public'),
-  prefix: '/upload',
+  prefix: '/uploads',
 })
 
 app.register(cors, {
